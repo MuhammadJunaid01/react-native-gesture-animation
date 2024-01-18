@@ -3,4 +3,5 @@ export type RootStackParamList = {
   About: undefined;
   Animation: undefined;
   GestureAnimation: undefined;
+  SwipeToDelete: undefined;
 };

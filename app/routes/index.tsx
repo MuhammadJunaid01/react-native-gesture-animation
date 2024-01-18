@@ -8,6 +8,7 @@ import HomeScreen from '../screens';
 import AboutScreen from '../screens/About';
 import Animation from '../screens/Animation';
 import GestureAnimation from '../screens/GestureAnimation';
+import SwipeToDelete from '../screens/SwipeToDelete';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,6 +32,11 @@ function Routes() {
             options={{headerShown: false}}
             name="GestureAnimation"
             component={GestureAnimation}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="SwipeToDelete"
+            component={SwipeToDelete}
           />
         </Stack.Navigator>
       </NavigationContainer>
