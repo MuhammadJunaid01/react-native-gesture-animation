@@ -35,6 +35,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
         style={tw` mt-11 bg-black px-5 py-3 rounded`}>
         <Text style={tw`  text-white`}>Go to Gesture Animation</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          // navigation.navigate('About');
+
+          navigation.navigate('SwipeToDelete');
+        }}
+        style={tw` mt-11 bg-black px-5 py-3 rounded`}>
+        <Text style={tw`  text-white`}>Go to SwipeToDelete Animation</Text>
+      </TouchableOpacity>
     </View>
   );
 };

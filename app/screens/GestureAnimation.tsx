@@ -9,6 +9,7 @@ import {tw} from '../lib/theme';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
 const GestureAnimation = () => {
   const start = useSharedValue({x: 0, y: 0});
@@ -17,7 +18,7 @@ const GestureAnimation = () => {
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        {translateX: offset.value.x},
+        {translateX: withSpring(offset.value.x)},
         {scale: isPressed.value ? 1.3 : 1},
       ],
     };
@@ -36,7 +37,7 @@ const GestureAnimation = () => {
       };
       console.log(
         'X POSITION: ',
-        Number(e.translationX.toFixed(0)) <= -81 ? 81 : 0,
+        Number(e.translationX.toFixed(0)) <= -160 ? 81 : 0,
       );
     })
     .onEnd(() => {
