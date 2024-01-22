@@ -1,12 +1,14 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {tw} from '../lib/theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/AntDesign';
+
 import {
   FlatList,
   GestureHandlerRootView,
   Swipeable,
 } from 'react-native-gesture-handler';
-import {Text, View} from 'react-native';
+import {Pressable, Text, TextInput, View} from 'react-native';
 type List = {
   name: string;
   age: number;
@@ -52,7 +54,33 @@ const SwipeToDelete = () => {
       isOpen: false,
     },
   ]);
-
+  const onComponentOpen = (id: number) => {
+    setList(prevData =>
+      prevData.map(data => {
+        if (data.id === id) {
+          return {...data, isOpen: true};
+        } else {
+          return {...data, isOpen: false};
+        }
+      }),
+    );
+  };
+  const onDelete = useCallback((id: number) => {
+    setList(prev => prev.filter(listData => listData.id !== id));
+  }, []);
+  const onEdit = useCallback(
+    (id: number, name: string) => {
+      const updatedList = list.map(listData => {
+        if (listData.id === id) {
+          return {...listData, name: name};
+        } else {
+          return listData;
+        }
+      });
+      setList(updatedList);
+    },
+    [list],
+  );
   return (
     <SafeAreaView style={tw` flex-1 h-full`}>
       <GestureHandlerRootView>
@@ -60,7 +88,14 @@ const SwipeToDelete = () => {
         <FlatList
           data={list}
           keyExtractor={(_, index) => `KEY+${index}`}
-          renderItem={data => <RenderList list={data.item} />}
+          renderItem={data => (
+            <RenderList
+              onDelete={onDelete}
+              onEdit={onEdit}
+              list={data.item}
+              onOpen={onComponentOpen}
+            />
+          )}
         />
       </GestureHandlerRootView>
     </SafeAreaView>
@@ -70,37 +105,66 @@ const SwipeToDelete = () => {
 export default SwipeToDelete;
 interface IRenderItem {
   list: List;
+  onOpen: (id: number) => void;
+  onDelete: (id: number) => void;
+  onEdit: (id: number, name: string) => void;
 }
-const RenderList: React.FC<IRenderItem> = ({list}) => {
-  const EMPTY_KEY = '';
-
-  const row: Array<any> = [];
-  const [key, setKey] = React.useState<string | any>(EMPTY_KEY);
-
+const RenderList: React.FC<IRenderItem> = ({
+  list,
+  onOpen,
+  onDelete,
+  onEdit,
+}) => {
+  const ref = useRef(null);
+  const [edit, setEdit] = useState({
+    name: '',
+    isEditable: false,
+  });
   const leftSwipe = () => {
     return (
-      <View
-        style={tw` bg-red-300 h-[100%] w-[15%] items-center justify-center`}>
-        <Text>DELETE</Text>
+      <View style={tw` bg-red-300 h-[96%] w-[50%] items-center justify-center`}>
+        <Pressable onPress={() => onDelete(list.id)}>
+          <Icon name="delete" size={18} />
+        </Pressable>
       </View>
     );
   };
   const rightSwipe = () => {
     return (
       <View
-        style={tw`  bg-green-300 h-[100%] w-[15%] items-center justify-center`}>
-        <Text>Edit</Text>
+        style={tw`  bg-green-300 h-[96%] w-[15%] items-center justify-center`}>
+        {edit.isEditable ? (
+          <TextInput
+            style={tw` w-full border border-gray-300`}
+            onChangeText={text => setEdit(prev => ({...prev, name: text}))}
+            returnKeyType="done"
+            onSubmitEditing={() => {
+              onEdit(list.id, edit.name);
+              ref.current?.close();
+            }}
+          />
+        ) : (
+          <Pressable
+            onPress={() => setEdit(prev => ({...prev, isEditable: true}))}>
+            <Icon name="edit" size={18} />
+          </Pressable>
+        )}
       </View>
     );
   };
-  const handleOpen = (index: number) => {
-    console.log('INDEX', index);
-    setKey(index);
-  };
+
+  useEffect(() => {
+    let count = 0;
+    if (list.isOpen === false) {
+      ref?.current?.close();
+    }
+    console.log('HYE', (count += 1));
+  });
   return (
     <Swipeable
+      ref={ref}
       key={list.id}
-      onSwipeableWillOpen={() => handleOpen(list.id)}
+      onSwipeableWillOpen={() => onOpen(list.id)}
       renderLeftActions={leftSwipe}
       renderRightActions={rightSwipe}>
       <View
