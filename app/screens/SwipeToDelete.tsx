@@ -120,19 +120,30 @@ const RenderList: React.FC<IRenderItem> = ({
     name: '',
     isEditable: false,
   });
-  const leftSwipe = () => {
-    return (
-      <View style={tw` bg-red-300 h-[96%] w-[50%] items-center justify-center`}>
-        <Pressable onPress={() => onDelete(list.id)}>
-          <Icon name="delete" size={18} />
-        </Pressable>
-      </View>
-    );
-  };
-  const rightSwipe = () => {
+  const leftSwipe = useCallback(
+    (progress: any, dragX: any) => {
+      console.log('progress', progress);
+      // console.log('DRAG X', dragX);
+      if (dragX > 300) {
+        console.log('HEY DRAG XXXXXXXXXXXX', dragX);
+      } else {
+        // console.log('DRAXXXXXXXXXXXXXXXX', dragX);
+      }
+      return (
+        <View
+          style={tw` bg-red-300 h-[96%] w-[90%] items-center justify-center`}>
+          <Pressable onPress={() => onDelete(list.id)}>
+            <Icon name="delete" size={18} />
+          </Pressable>
+        </View>
+      );
+    },
+    [list.id, onDelete],
+  );
+  const rightSwipe = (progress, dragX) => {
     return (
       <View
-        style={tw`  bg-green-300 h-[96%] w-[15%] items-center justify-center`}>
+        style={tw`  bg-green-300 h-[96%] w-[100%] items-center justify-center`}>
         {edit.isEditable ? (
           <TextInput
             style={tw` w-full border border-gray-300`}
@@ -158,7 +169,7 @@ const RenderList: React.FC<IRenderItem> = ({
     if (list.isOpen === false) {
       ref?.current?.close();
     }
-    console.log('HYE', (count += 1));
+    // console.log('HYE', (count += 1));
   });
   return (
     <Swipeable
