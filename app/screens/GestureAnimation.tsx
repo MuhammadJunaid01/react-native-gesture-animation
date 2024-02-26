@@ -12,13 +12,12 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 const GestureAnimation = () => {
-  const start = useSharedValue({x: 0, y: 0});
   const isPressed = useSharedValue(false);
   const offset = useSharedValue({x: 0, y: 0});
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        {translateX: withSpring(offset.value.x)},
+        {translateY: withSpring(offset.value.y)},
         {scale: isPressed.value ? 1.3 : 1},
       ],
     };
