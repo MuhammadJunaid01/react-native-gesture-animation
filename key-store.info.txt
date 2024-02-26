@@ -1,0 +1,13 @@
+password: junaid_mind
+
+What is your first and last name? muhammad junaid
+
+What is the name of your organizational unit?  Mobile Development
+
+What is the name of your organization? mindquest
+
+What is the name of your City or Locality? My locality is banskhali, within the city of Chittagong
+
+What is the name of your State or Province? My state is Chittagong
+
+What is the two-letter country code for this unit? BD
